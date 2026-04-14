@@ -1,4 +1,4 @@
-package client;
+package client.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
