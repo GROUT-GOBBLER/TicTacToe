@@ -7,17 +7,17 @@ import javafx.scene.control.*;
     William Vipperman, Yarrick Dillard
     CS1760 - Adv Obj OOP & Design
     Final Project
-    LeaderboardPageController.java
+    MatchHistoryPageController.java
 */
 
-public class LeaderboardPageController {
+public class MatchHistoryPageController {
     // FXML Variables.
-    @FXML TableView<?> leaderboard_table;
-    @FXML TableColumn<?, ?> player_column, wins_column, losses_column, win_loss_ratio_column;
+    @FXML TableView match_history_table;
+    @FXML TableColumn date_column, time_column, opponent_column, result_column;
 
     // FXML Methods.
     @FXML private void initialize() {
-        // Populate leaderboard_table with values.
+        // Populate match_history_table with values.
     }
 
     // Other methods.
