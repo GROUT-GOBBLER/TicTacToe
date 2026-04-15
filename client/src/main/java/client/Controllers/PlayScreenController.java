@@ -37,5 +37,8 @@ public class PlayScreenController {
     // Other methods.
     public void initializeData(Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         System.out.println("initalizeData()");
+        this.socket = socket;
+        input = in;
+        output = out;
     }
 }

@@ -34,7 +34,7 @@ public class MainMenuController {
             Parent root = loader.load();
 
             MatchHistoryPageController mhp_controller = loader.getController();
-            mhp_controller.initializeData();
+            mhp_controller.initializeData(socket, input, output);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
@@ -52,7 +52,7 @@ public class MainMenuController {
             Parent root = loader.load();
 
             LeaderboardPageController lp_controller = loader.getController();
-            lp_controller.initializeData();
+            lp_controller.initializeData(socket, input, output);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
