@@ -1,6 +1,9 @@
 package client.Controllers;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 import client.App;
 import javafx.fxml.*;
@@ -16,6 +19,11 @@ import javafx.stage.Stage;
 */
 
 public class MainMenuController {
+    // Client Variables
+    Socket socket;
+    ObjectInputStream input;
+    ObjectOutputStream output;
+
     // FXML Variables.
     @FXML Label welcome_name_label, current_connected_label;
 
@@ -62,7 +70,7 @@ public class MainMenuController {
             Parent root = loader.load();
 
             PlayScreenController ps_controller = loader.getController();
-            ps_controller.initializeData();
+            ps_controller.initializeData(socket, input, output);
 
             Stage stage = (Stage) welcome_name_label.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -73,7 +81,10 @@ public class MainMenuController {
     }
     
     // Other methods.
-    public void initializeData(String name) {
+    public void initializeData(String name, Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         welcome_name_label.setText("Welcome " + name + "!");
+        this.socket = socket;
+        input = in;
+        output = out;
     }
 }
