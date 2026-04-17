@@ -30,6 +30,7 @@ public class MainMenuController {
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
+            stage.setTitle("Match History");
             stage.setScene(scene);
             stage.show();
         }
@@ -48,6 +49,7 @@ public class MainMenuController {
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
+            stage.setTitle("Leaderboard");
             stage.setScene(scene);
             stage.show();
         }
@@ -66,6 +68,7 @@ public class MainMenuController {
 
             Stage stage = (Stage) welcome_name_label.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setTitle("Tic-Tac-Toe");
         }
         catch (IOException e) {
             e.printStackTrace();
