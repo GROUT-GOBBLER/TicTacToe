@@ -1,5 +1,9 @@
 package client.Controllers;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -11,6 +15,11 @@ import javafx.scene.control.*;
 */
 
 public class MatchHistoryPageController {
+    // Client Variables
+    Socket socket;
+    ObjectInputStream input;
+    ObjectOutputStream output;
+    
     // FXML Variables.
     @FXML TableView match_history_table;
     @FXML TableColumn date_column, time_column, opponent_column, result_column;
@@ -21,7 +30,10 @@ public class MatchHistoryPageController {
     }
 
     // Other methods.
-    public void initializeData() {
+    public void initializeData(Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         System.out.println("initalizeData()");
+        this.socket = socket;
+        input = in;
+        output = out;
     }
 }
