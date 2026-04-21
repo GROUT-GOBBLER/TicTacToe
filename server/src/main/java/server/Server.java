@@ -152,6 +152,14 @@ public class Server {
         }
     }
 
+    public void SaveGame(GameData game) throws ClassNotFoundException, IOException {
+
+    }
+
+    public ArrayList<GameData> GetAllGames() {
+        
+    }
+
     @SuppressWarnings("unused")
     public static void main(String[] args) {
         System.out.println("\n\nStarting server...\n\n");
