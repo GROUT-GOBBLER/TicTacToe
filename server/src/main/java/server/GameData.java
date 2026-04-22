@@ -1,5 +1,6 @@
 package server;
 import java.io.*;
+import java.util.ArrayList;
 
 public class GameData implements Serializable {
     private String winner;
@@ -60,5 +61,45 @@ public class GameData implements Serializable {
 
     public String[][] getBoard() {
         return board;
+    }
+
+    @Override
+    public String toString() {
+        return "Winner: " + winner + " Loser: " + loser;
+    }
+
+        public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
+        try {
+            ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", true));
+            fileOut.writeObject(game);
+
+            fileOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<GameData> GetAllGames() throws ClassNotFoundException, IOException {
+        ObjectInputStream fileIn = new ObjectInputStream(new FileInputStream("Saved_games.dat"));
+
+        GameData curr;
+        ArrayList<GameData> gameList = new ArrayList<GameData>();
+        try {
+            while (true) {
+                curr = (GameData) fileIn.readObject();
+
+                gameList.add(curr);
+            }
+        } 
+        catch (java.io.EOFException e) {
+            fileIn.close();
+            return gameList;
+        }
+        catch (Exception e2) {
+            e2.printStackTrace();
+        }
+
+        fileIn.close();
+        return new ArrayList<GameData>();
     }
 }
