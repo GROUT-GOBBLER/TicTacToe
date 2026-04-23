@@ -68,7 +68,7 @@ public class GameData implements Serializable {
         return "Winner: " + winner + " Loser: " + loser;
     }
 
-        public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
+    public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
         try {
             ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", true));
             fileOut.writeObject(game);
