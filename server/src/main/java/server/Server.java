@@ -9,6 +9,7 @@ package server;
 
 import java.io.*;
 import java.net.*;
+import java.nio.file.*;
 
 public class Server {
     // Constants.
@@ -259,6 +260,37 @@ public class Server {
         }
     }
 
+    @SuppressWarnings("unused")
+    public static void main(String[] args) {
+        // Init a save file
+        Path path = Path.of("Saved_games.dat");
+
+        try {
+            if (!Files.exists(path)) Files.createFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        // Test making and saving game
+        boolean runTest = false;
+
+        if (runTest) {
+            String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
+            GameData exampleGame = new GameData("John", "Jane", example_board);
+
+            try {
+                GameData.SaveGame(exampleGame);
+
+                ArrayList<GameData> list = GameData.GetAllGames();
+
+                list.forEach(System.out::println);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Server launch
+        System.out.println("\n\nStarting server...\n\n");
     // Helper methods.
     private void addMoveToBoard(String move) {         
         // X ... stupid_compsci_major_counter_variable=0,1
