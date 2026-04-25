@@ -9,7 +9,6 @@ package server;
 
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
 
 public class Server {
     // Constants.
@@ -221,6 +220,10 @@ public class Server {
                             case OWin: {
                                 if (user_letter.equals("O")) { respond("won"); }
                                 else { respond("lost"); }
+                                break;
+                            }
+                            case Draw: {
+                                respond("draw");
                                 break;
                             }
                             default: {
