@@ -6,8 +6,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import client.App;
+import javafx.application.Platform;
 import javafx.fxml.*;
 import javafx.scene.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
@@ -20,12 +22,14 @@ import javafx.stage.Stage;
 
 public class MainMenuController {
     // Client Variables
+    String client_name;
     Socket socket;
     ObjectInputStream input;
     ObjectOutputStream output;
 
     // FXML Variables.
     @FXML Label welcome_name_label, current_connected_label;
+    @FXML Button play_button;
 
     // FXML Methods.
     @FXML private void matchHistoryButtonPressed() {
@@ -67,18 +71,39 @@ public class MainMenuController {
     }
 
     @FXML private void joinGameButtonPressed() {
+        current_connected_label.setText("Waiting for other player...");
+        play_button.setDisable(true);
+
         try {
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("tic-tac-toe-basic-board.fxml"));
-            Parent root = loader.load();
+            output.writeUTF("How many connected?");
+            output.flush();
+            
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        boolean active = true;
+                        while (active) {
+                            String response = input.readUTF();
 
-            PlayScreenController ps_controller = loader.getController();
-            ps_controller.initializeData(socket, input, output);
+                            if (response.equals("1")) {
+                                output.writeUTF("I am connected.");
+                                output.flush();
+                            }
+                            if (response.equals("2")) { active = false; }
+                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-            Stage stage = (Stage) welcome_name_label.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Tic-Tac-Toe");
+                    Platform.runLater(() -> {
+                        openPlayScreen();
+                    });
+                }
+            }).start();   
         }
-        catch (IOException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -86,8 +111,27 @@ public class MainMenuController {
     // Other methods.
     public void initializeData(String name, Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         welcome_name_label.setText("Welcome " + name + "!");
+        client_name = name;
         this.socket = socket;
         input = in;
         output = out;
+    }
+
+    private void openPlayScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("tic-tac-toe-basic-board.fxml"));
+            Parent root = loader.load();
+
+            PlayScreenController ps_controller = loader.getController();
+            ps_controller.initializeData(client_name, socket, input, output);
+
+            Stage stage = (Stage) welcome_name_label.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setResizable(false);
+            stage.setTitle("Tic-Tac-Toe");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
