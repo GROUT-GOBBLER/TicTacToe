@@ -74,7 +74,7 @@ public class GameOverPageController {
                 try { 
                     String win_status = input.readUTF(); 
 
-                    if (win_status.equals("won") || win_status.equals("lost")) {
+                    if (win_status.equals("won") || win_status.equals("lost") || win_status.equals("draw")) {
                         you_won_lost_label.setText("You " + win_status + "!");
                         alive = false;
                     }
