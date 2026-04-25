@@ -43,7 +43,7 @@ public class LoginPageController {
             
             myOutputStream = new ObjectOutputStream(socket.getOutputStream());
     		myOutputStream.flush();
-            myOutputStream.writeObject(user_name);   
+            myOutputStream.writeObject(user_name);
 			myOutputStream.flush();
 
             myInputStream = new ObjectInputStream(socket.getInputStream());
@@ -56,6 +56,8 @@ public class LoginPageController {
             mm_controller.initializeData(user_name, socket, myInputStream, myOutputStream);
 
             Stage stage = (Stage) name_textfield.getScene().getWindow();
+            stage.setResizable(false);
+            stage.setTitle("Main menu");
             stage.setScene(new Scene(root));
         }
         catch (IOException e) {

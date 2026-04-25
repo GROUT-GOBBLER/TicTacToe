@@ -22,6 +22,7 @@ public class App extends Application {
         scene = new Scene(loadFXML("login-page"));
         stage.setScene(scene);
         stage.setTitle("LOGIN");
+        stage.setResizable(false);
         stage.show();
     }
 
@@ -35,7 +36,7 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        System.out.println("\n\nStarting client...\n\n");
+        System.out.println("\n\nApp.java\n\n");
         launch();
     }
 }
