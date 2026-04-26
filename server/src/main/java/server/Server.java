@@ -247,10 +247,10 @@ public class Server {
                             if (threads[0].username.equals(username)) enemy_name = threads[1].username;
                             else enemy_name = threads[0].username;
 
-                            GameData game_data = new GameData("Player1", "Player2", board_arr);
+                            // GameData game_data = new GameData("Player1", "Player2", board_arr);
 
                             try {
-                                GameData.saveGame(game_data); 
+                                // GameData.saveGame(game_data); 
                                 testLoad(); 
                             } 
                             catch (Exception e) { e.printStackTrace(); }
