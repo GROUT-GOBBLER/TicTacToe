@@ -134,7 +134,6 @@ public class GameData implements Serializable {
         catch (Exception e3) {
             e3.printStackTrace();
         }
-        catch (Exception e3) { e3.printStackTrace(); }
 
         fileIn.close();
         return new ArrayList<GameData>();
