@@ -5,7 +5,7 @@ module client {
     requires javafx.base;
 
     opens client to javafx.fxml;
-    opens client.Controllers to javafx.fxml;
+    opens client.Controllers to javafx.fxml, javafx.base;
 
     exports client;
 }
