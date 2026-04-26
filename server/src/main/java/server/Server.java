@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Server {
     // Constants.
@@ -246,6 +247,29 @@ public class Server {
                         }
                         else { stupid_compsci_major_counter_variable = 1; }
                     }
+
+                    else if (action.equals("Give leaderboard")) {
+                        HashMap<String, Integer> playerHashMap = new HashMap<>();
+                        ArrayList<GameData> list = GameData.GetAllGames();
+
+                        if (list.size() > 0) {
+                            for (GameData g : list) {
+                                if (playerHashMap.containsKey(g.getWinner())) {
+                                    int currVal = playerHashMap.get(g.getWinner());
+                                    playerHashMap.replace(g.getWinner(), currVal + 1);
+                                }
+                                else {
+                                    playerHashMap.put(g.getWinner(), 1);
+                                }
+                            }
+                        }
+
+                        myOutputStream.writeObject(playerHashMap);
+                        myOutputStream.flush();
+                    }
+                    else if (action.equals("Give my history")) {
+
+                    }
                     else {
                         System.out.println("INVALID INPUT: " + action);
                         alive = false;
@@ -261,6 +285,7 @@ public class Server {
         }
     }
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         // Init a save file
         Path path = Path.of("Saved_games.dat");
@@ -274,7 +299,7 @@ public class Server {
         // Server launch
         System.out.println("\n\nStarting server...\n\n");
 
-        //Server s = new Server(2);
+        Server s = new Server(2);
     }
     
     // Helper methods.
