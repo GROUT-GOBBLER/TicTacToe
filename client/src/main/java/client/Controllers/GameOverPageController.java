@@ -1,17 +1,19 @@
 package client.Controllers;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
-
 import client.App;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.fxml.*;
+import javafx.scene.*;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+/*
+    William Vipperman, Yarrick Dillard
+    CS1760 - Adv Obj OOP & Design
+    Final Project
+    GameOverPageController.java
+*/
 
 public class GameOverPageController {
     // FXML variables.
@@ -63,7 +65,6 @@ public class GameOverPageController {
         output = out;
         username = name;
 
-        
         try {
             // Get win/lose.
             output.writeUTF("Did I win?~" + x_or_o);
@@ -104,7 +105,7 @@ public class GameOverPageController {
         }
     }
 
-    private void setEndingBoard(String end_board) {     // UNTESTED.
+    private void setEndingBoard(String end_board) {     
         // Expected string format: XO XOX OX
         // ^ Means A1=X, A2=O, A3=Nothing, A4=X, etc.
 

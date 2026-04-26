@@ -21,14 +21,6 @@ import javafx.stage.Stage;
     PlayScreenController.java
 */
 
-
-// CURRENT PROGRESS: 
-//  - Clients can communicate in the tic-tac-toe game.
-//  - The server knows when the game is won and which person won.
-//  - The client who sent the winning move will know that the game is over.
-//  - The other client does not. NEED TO FIX THIS.
-
-
 public class PlayScreenController {
     // Client Variables
     private Socket socket;
