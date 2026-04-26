@@ -10,6 +10,7 @@ package server;
 import java.io.*;
 import java.net.*;
 import java.nio.file.*;
+import java.util.ArrayList;
 
 public class Server {
     // Constants.
@@ -260,7 +261,6 @@ public class Server {
         }
     }
 
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
         // Init a save file
         Path path = Path.of("Saved_games.dat");
@@ -291,6 +291,8 @@ public class Server {
 
         // Server launch
         System.out.println("\n\nStarting server...\n\n");
+    }
+    
     // Helper methods.
     private void addMoveToBoard(String move) {         
         // X ... stupid_compsci_major_counter_variable=0,1
@@ -410,11 +412,5 @@ public class Server {
 
     private void saveResultsToJSON() {
         // To be completed by Will.
-    }
-
-    // Main.
-    @SuppressWarnings("unused") public static void main(String[] args) {
-        System.out.println("\n\nServer.java\n\n");
-        Server Server = new Server(2);
     }
 }
