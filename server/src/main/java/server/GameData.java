@@ -2,6 +2,7 @@ package server;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 /*
     William Vipperman, Yarrick Dillard
@@ -12,14 +13,17 @@ import java.util.ArrayList;
 
 public class GameData implements Serializable {
     // Instance variables.
+    private String[] players;
+    private Date date;
     private String winner;
     private String loser;
     private String[][] board;
 
-    // Constructors.
-    public GameData(String win, String lose, String[][] b) {
-        winner = win;
-        loser = lose;
+    public GameData(String[] ps, Date d, String w, String l, String[][] b) {
+        players = ps;
+        date = d;
+        winner = w;
+        loser = l;
 
         if (b.length != 3) { 
             throw new IllegalArgumentException("Board must have exactly 3 rows"); 
@@ -34,7 +38,7 @@ public class GameData implements Serializable {
         board = b;
     }
 
-    public GameData(String[][] b) {
+    public GameData(String[] ps, Date d, String[][] b) {
         winner = new String("-");
         loser = new String("-");
 
@@ -76,18 +80,22 @@ public class GameData implements Serializable {
 
     // Other methods.
     @Override
-    public String toString() { return "Winner: " + winner + " Loser: " + loser; }
+    public String toString() {
+        return "Player 1: " + players[0] + " | Player2: " + players[1] + " | Played at: " + date.toString();
+    }
 
-    public static void saveGame(GameData game) throws ClassNotFoundException, IOException {
-        ArrayList<GameData> gameList = getAllGames();
+    public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
+        ArrayList<GameData> gameList = GetAllGames();
 
         try {
             ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", false));
             if (gameList.size() > 0) {
-                for (GameData listedGame : gameList) { 
+                for (GameData listedGame : gameList) {
                     fileOut.writeObject(listedGame);
                 }
             }
+
+            fileOut.writeObject(game);
 
             fileOut.writeObject(game);
             fileOut.close();
@@ -95,11 +103,12 @@ public class GameData implements Serializable {
         catch (Exception e) { e.printStackTrace(); }
     }
 
-    public static ArrayList<GameData> getAllGames() throws ClassNotFoundException, IOException {
+    public static ArrayList<GameData> GetAllGames() throws ClassNotFoundException, IOException {
         ObjectInputStream fileIn = null;
 
-        try { fileIn = new ObjectInputStream(new FileInputStream("Saved_games.dat")); } 
-        catch (Exception e) {
+        try {
+            fileIn = new ObjectInputStream(new FileInputStream("Saved_games.dat"));
+        } catch (Exception e) {
             if (fileIn != null) fileIn.close();
             return new ArrayList<GameData>();
         }
@@ -121,6 +130,9 @@ public class GameData implements Serializable {
             //likely empty so return empty
             fileIn.close();
             return new ArrayList<GameData>();
+        }
+        catch (Exception e3) {
+            e3.printStackTrace();
         }
         catch (Exception e3) { e3.printStackTrace(); }
 

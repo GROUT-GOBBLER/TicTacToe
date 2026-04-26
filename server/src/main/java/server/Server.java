@@ -11,6 +11,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 
 public class Server {
     // Constants.
@@ -258,6 +260,29 @@ public class Server {
                         }
                         else { stupid_compsci_major_counter_variable = 1; }
                     }
+
+                    else if (action.equals("Give leaderboard")) {
+                        HashMap<String, Integer> playerHashMap = new HashMap<>();
+                        ArrayList<GameData> list = GameData.GetAllGames();
+
+                        if (list.size() > 0) {
+                            for (GameData g : list) {
+                                if (playerHashMap.containsKey(g.getWinner())) {
+                                    int currVal = playerHashMap.get(g.getWinner());
+                                    playerHashMap.replace(g.getWinner(), currVal + 1);
+                                }
+                                else {
+                                    playerHashMap.put(g.getWinner(), 1);
+                                }
+                            }
+                        }
+
+                        myOutputStream.writeObject(playerHashMap);
+                        myOutputStream.flush();
+                    }
+                    else if (action.equals("Give my history")) {
+
+                    }
                     else {
                         System.out.println("INVALID INPUT: " + action);
                         alive = false;
@@ -272,7 +297,7 @@ public class Server {
             removeClient(myId);
         }
     }
-
+    
     // Helper methods.
     private void addMoveToBoard(String move) {         
         // X ... stupid_compsci_major_counter_variable=0,1
@@ -390,20 +415,28 @@ public class Server {
         board_arr[2][0] = " "; board_arr[2][1] = " "; board_arr[2][2] = " ";
     }
 
-    private void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+    private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+        String[] one = {"John", "Jane"};
+        String[] two = {"John", "Jill"};
+        String[] three = {"Jill", "Jane"};
+
         String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-        GameData exampleGame = new GameData("John", "Jane", example_board);
+        GameData exampleGame = new GameData(one, new Date(), "John", "Jane", example_board);
+        GameData exampleGame2 = new GameData(two, new Date(), "John", "Jill", example_board);
+        GameData exampleGame3 = new GameData(three, new Date(), "Jill", "Jane", example_board);
 
         try {
-            GameData.saveGame(exampleGame);
+            GameData.SaveGame(exampleGame);
+            GameData.SaveGame(exampleGame2);
+            GameData.SaveGame(exampleGame3);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void testLoad() {
+    private static void testLoad() {
         try {
-            ArrayList<GameData> list = GameData.getAllGames();
+            ArrayList<GameData> list = GameData.GetAllGames();
             list.forEach(System.out::println);
         } catch (Exception e) {
             e.printStackTrace();
@@ -411,6 +444,7 @@ public class Server {
     }
 
     // MAIN.
+    @SuppressWarnings("unused")
     public static void main(String[] args) {
         // Init a save file
         Path path = Path.of("Saved_games.dat");
