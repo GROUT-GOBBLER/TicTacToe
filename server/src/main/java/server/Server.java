@@ -241,7 +241,7 @@ public class Server {
                         System.out.println("Back to main menu.\t" + stupid_compsci_major_counter_variable);
 
                         if (stupid_compsci_major_counter_variable == 1) {
-                            saveResultsToJSON();
+                            //saveResultsToJSON(); Yar needs tp replace with method from GameData.java
                             resetVariables();
                         }
                         else { stupid_compsci_major_counter_variable = 1; }
@@ -270,27 +270,11 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        // Test making and saving game
-        boolean runTest = false;
-
-        if (runTest) {
-            String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-            GameData exampleGame = new GameData("John", "Jane", example_board);
-
-            try {
-                GameData.SaveGame(exampleGame);
-
-                ArrayList<GameData> list = GameData.GetAllGames();
-
-                list.forEach(System.out::println);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         // Server launch
         System.out.println("\n\nStarting server...\n\n");
+
+        //Server s = new Server(2);
     }
     
     // Helper methods.
@@ -410,7 +394,23 @@ public class Server {
         board_arr[2][0] = " "; board_arr[2][1] = " "; board_arr[2][2] = " ";
     }
 
-    private void saveResultsToJSON() {
-        // To be completed by Will.
+    private void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+        String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
+        GameData exampleGame = new GameData("John", "Jane", example_board);
+
+        try {
+            GameData.SaveGame(exampleGame);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void testLoad() {
+        try {
+            ArrayList<GameData> list = GameData.GetAllGames();
+            list.forEach(System.out::println);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
