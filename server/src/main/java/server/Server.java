@@ -11,6 +11,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Server {
@@ -290,6 +291,9 @@ public class Server {
         // Init a save file
         Path path = Path.of("Saved_games.dat");
 
+        //testSave(); 
+        testLoad();
+
         try {
             if (!Files.exists(path)) Files.createFile(path);
         } catch (IOException e) {
@@ -419,18 +423,26 @@ public class Server {
         board_arr[2][0] = " "; board_arr[2][1] = " "; board_arr[2][2] = " ";
     }
 
-    private void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+    private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+        String[] one = {"John", "Jane"};
+        String[] two = {"John", "Jill"};
+        String[] three = {"Jill", "Jane"};
+
         String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-        GameData exampleGame = new GameData("John", "Jane", example_board);
+        GameData exampleGame = new GameData(one, new Date(), "John", "Jane", example_board);
+        GameData exampleGame2 = new GameData(two, new Date(), "John", "Jill", example_board);
+        GameData exampleGame3 = new GameData(three, new Date(), "Jill", "Jane", example_board);
 
         try {
             GameData.SaveGame(exampleGame);
+            GameData.SaveGame(exampleGame2);
+            GameData.SaveGame(exampleGame3);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void testLoad() {
+    private static void testLoad() {
         try {
             ArrayList<GameData> list = GameData.GetAllGames();
             list.forEach(System.out::println);
