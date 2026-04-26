@@ -1,13 +1,18 @@
 package server;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class GameData implements Serializable {
+    private String[] players;
+    private Date date;
     private String winner;
     private String loser;
     private String[][] board;
 
-    public GameData(String w, String l, String[][] b) {
+    public GameData(String[] ps, Date d, String w, String l, String[][] b) {
+        players = ps;
+        date = d;
         winner = w;
         loser = l;
 
@@ -20,7 +25,7 @@ public class GameData implements Serializable {
         board = b;
     }
 
-    public GameData(String[][] b) {
+    public GameData(String[] ps, Date d, String[][] b) {
         winner = new String("-");
         loser = new String("-");
 
@@ -65,7 +70,7 @@ public class GameData implements Serializable {
 
     @Override
     public String toString() {
-        return "Winner: " + winner + " Loser: " + loser;
+        return "Player 1: " + players[0] + " | Player2: " + players[1] + " | Played at: " + date.toString();
     }
 
     public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
