@@ -53,8 +53,7 @@ public class Server {
         catch (Exception e) { System.out.println("Problem with server"); }
     }
 
-    private void runServer() throws IOException
-    {
+    private void runServer() throws IOException {
        ServerSocket s = new ServerSocket(PORT);
 	   System.out.println("Started: " + s);
           
@@ -90,22 +89,16 @@ public class Server {
     }
 
     public synchronized void removeClient(int id) {
-        try                          
-        {                             
-            users[id].close();    
-        }                            
-        catch (IOException e)
-        {
-            System.out.println("Already closed");
-        }
+        try { users[id].close(); }                            
+        catch (IOException e) { System.out.println("Already closed"); }
 
         System.out.println("removing: " + threads[id].username);
 
         users[id] = null;
         threads[id] = null;
-        // fill up "gap" in arrays
-        for (int i = id; i < numUsers-1; i++)           
-        {                             
+
+        // Fill up "gap" in arrays.
+        for (int i = id; i < numUsers-1; i++) {                             
             users[i] = users[i+1];
             threads[i] = threads[i+1];
             threads[i].setId(i);
@@ -121,6 +114,7 @@ public class Server {
         private ObjectOutputStream myOutputStream;
         private int myId;
         public String username = "none";
+        private String current_x_or_o;
          
         private UserThread(Socket newSocket, String user, int id, ObjectInputStream in) throws IOException {
             mySocket = newSocket;
@@ -128,6 +122,7 @@ public class Server {
             username = user;
             myInputStream = in;
             myOutputStream = new ObjectOutputStream(newSocket.getOutputStream());
+            current_x_or_o = "";
         }
 
         @SuppressWarnings("unused") public ObjectInputStream getInputStream() { return myInputStream; }
@@ -165,7 +160,10 @@ public class Server {
                         respond(stupid_compsci_major_counter_variable + ""); 
                     }
                     else if (action.equals("What am I?")) { 
-                        respond(stupid_compsci_major_counter_variable + ""); 
+                        if (stupid_compsci_major_counter_variable == 1) { current_x_or_o = "X"; }
+                        else { current_x_or_o = "O"; }
+
+                        respond(stupid_compsci_major_counter_variable + "");
                         stupid_compsci_major_counter_variable--;
                     }
                     else if (action.equals("I made my move.")) {
@@ -242,9 +240,23 @@ public class Server {
                     else if (action.equals("Back to main menu.")) {
                         System.out.println("Back to main menu.\t" + stupid_compsci_major_counter_variable);
 
-                        if (stupid_compsci_major_counter_variable == 1) {
-                            //saveResultsToJSON(); Yar needs tp replace with method from GameData.java
+                        if (stupid_compsci_major_counter_variable == 1) {   // Save game data to .dat file.
+                            String my_name = username;
+                            String enemy_name;
+                            
+                            if (threads[0].username.equals(username)) enemy_name = threads[1].username;
+                            else enemy_name = threads[0].username;
+
+                            // GameData game_data = new GameData("Player1", "Player2", board_arr);
+
+                            try {
+                                // GameData.saveGame(game_data); 
+                                testLoad(); 
+                            } 
+                            catch (Exception e) { e.printStackTrace(); }
+
                             resetVariables();
+                            current_x_or_o = "";
                         }
                         else { stupid_compsci_major_counter_variable = 1; }
                     }
@@ -467,5 +479,19 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // MAIN.
+    @SuppressWarnings("unused")
+    public static void main(String[] args) {
+        // Init a save file
+        Path path = Path.of("Saved_games.dat");
+
+        try { if (!Files.exists(path)) Files.createFile(path); } 
+        catch (IOException e) { e.printStackTrace(); }
+
+        // Server launch
+        System.out.println("\n\nStarting server...\n\n");
+        Server s = new Server(2);
     }
 }

@@ -1,9 +1,18 @@
 package server;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+/*
+    William Vipperman, Yarrick Dillard
+    CS1760 - Adv Obj OOP & Design
+    Final Project
+    GameData.java
+*/
+
 public class GameData implements Serializable {
+    // Instance variables.
     private String[] players;
     private Date date;
     private String winner;
@@ -16,10 +25,14 @@ public class GameData implements Serializable {
         winner = w;
         loser = l;
 
-        if (b.length != 3) throw new IllegalArgumentException("Board must have exactly 3 rows");
+        if (b.length != 3) { 
+            throw new IllegalArgumentException("Board must have exactly 3 rows"); 
+        }
 
         for (int index = 0; index < b.length; index++) {
-            if (b[index].length != 3) throw new IllegalArgumentException("Each row in the board must have exactly 3 columns");
+            if (b[index].length != 3) { 
+                throw new IllegalArgumentException("Each row in the board must have exactly 3 columns"); 
+            }
         }
 
         board = b;
@@ -29,45 +42,43 @@ public class GameData implements Serializable {
         winner = new String("-");
         loser = new String("-");
 
-        if (b.length != 3) throw new IllegalArgumentException("Board must have exactly 3 rows");
+        if (b.length != 3) { 
+            throw new IllegalArgumentException("Board must have exactly 3 rows");
+        }
 
         for (int index = 0; index < b.length; index++) {
-            if (b[index].length != 3) throw new IllegalArgumentException("Each row in the board must have exactly 3 columns");
+            if (b[index].length != 3) { 
+                throw new IllegalArgumentException("Each row in the board must have exactly 3 columns");
+            }
         }
 
         board = b;
     }
 
-    public void setWinner(String winner) {
-        this.winner = winner;
-    }
+    // Get methods.
+    public String getWinner() { return winner; }
+    public String getLoser() { return loser; }
+    public String[][] getBoard() { return board; }
 
-    public String getWinner() {
-        return winner;
-    }
-
-    public void setLoser(String loser) {
-        this.loser = loser;
-    }
-
-    public String getLoser() {
-        return loser;
-    }
-
+    // Set methods.
+    public void setWinner(String winner) { this.winner = winner; }
+    public void setLoser(String loser) { this.loser = loser; }
+    
     public void setBoard(String[][] b) {
-        if (b.length != 3) throw new IllegalArgumentException("Board must have exactly 3 rows");
+        if (b.length != 3) {
+            throw new IllegalArgumentException("Board must have exactly 3 rows");
+        }
 
         for (int index = 0; index < b.length; index++) {
-            if (b[index].length != 3) throw new IllegalArgumentException("Each row in the board must have exactly 3 columns");
+            if (b[index].length != 3) {
+                throw new IllegalArgumentException("Each row in the board must have exactly 3 columns");
+            }
         }
 
         board = b;
     }
 
-    public String[][] getBoard() {
-        return board;
-    }
-
+    // Other methods.
     @Override
     public String toString() {
         return "Player 1: " + players[0] + " | Player2: " + players[1] + " | Played at: " + date.toString();
@@ -86,10 +97,10 @@ public class GameData implements Serializable {
 
             fileOut.writeObject(game);
 
+            fileOut.writeObject(game);
             fileOut.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } 
+        catch (Exception e) { e.printStackTrace(); }
     }
 
     public static ArrayList<GameData> GetAllGames() throws ClassNotFoundException, IOException {
@@ -104,10 +115,10 @@ public class GameData implements Serializable {
 
         GameData curr;
         ArrayList<GameData> gameList = new ArrayList<GameData>();
+
         try {
             while (true) {
                 curr = (GameData) fileIn.readObject();
-
                 gameList.add(curr);
             }
         } 
