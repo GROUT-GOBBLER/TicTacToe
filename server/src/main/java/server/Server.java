@@ -318,6 +318,10 @@ public class Server {
                                 String dataString = gamePlayers[1] + ", Tie";
                                 gameHashMap.put(game.getDate(), dataString);
                             }
+                            else if (gamePlayers[1].equals(username)) {
+                                String dataString = gamePlayers[0] + ", Tie";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
                         }
 
                         myOutputStream.writeObject(gameHashMap);
@@ -344,7 +348,7 @@ public class Server {
         Path path = Path.of("Saved_games.dat");
 
         //testSave(); 
-        testLoad();
+        //testLoad();
 
         try {
             if (!Files.exists(path)) Files.createFile(path);
@@ -477,18 +481,14 @@ public class Server {
 
     private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
         String[] one = {"Will", "Fred"};
-        String[] two = {"Fred", "Jill"};
-        String[] three = {"Jill", "Jane"};
+        //String[] two = {"Fred", "Jill"};
+        //String[] three = {"Jill", "Jane"};
 
-        String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-        GameData exampleGame = new GameData(one, new Date(), "Will", "Fred", example_board);
-        //GameData exampleGame2 = new GameData(two, new Date(), "Jill", "Fred", example_board);
-        //GameData exampleGame3 = new GameData(three, new Date(), "Jane", "Jill", example_board);
+        String[][] example_board = {{"x", "x", "o"}, {"o", "x", "x"}, {"x", "o", "o"}};
+        GameData exampleGame = new GameData(one, new Date(), null, null, example_board);
 
         try {
             GameData.SaveGame(exampleGame);
-            //GameData.SaveGame(exampleGame2);
-            //GameData.SaveGame(exampleGame3);
         } catch (Exception e) {
             e.printStackTrace();
         }
