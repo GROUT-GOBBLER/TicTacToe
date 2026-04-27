@@ -138,6 +138,7 @@ public class Server {
             catch (Exception e) { e.printStackTrace(); }
         }
 
+        @SuppressWarnings("unused")
         public void run() {  
             boolean alive = true;
 
@@ -253,17 +254,35 @@ public class Server {
                         else { stupid_compsci_major_counter_variable = 1; }
                     }
                     else if (action.equals("Give leaderboard")) {
-                        HashMap<String, Integer> playerHashMap = new HashMap<>();
+                        HashMap<String, String> playerHashMap = new HashMap<>();
                         ArrayList<GameData> list = GameData.GetAllGames();
 
-                        if (list.size() > 0) {
-                            for (GameData g : list) {
-                                if (playerHashMap.containsKey(g.getWinner())) {
-                                    int currVal = playerHashMap.get(g.getWinner());
-                                    playerHashMap.replace(g.getWinner(), currVal + 1);
+                        for (GameData game : list) {
+                            if (game.getWinner() != null && game.getLoser() != null) {
+                                // Set winners
+                                if (playerHashMap.containsKey(game.getWinner())) {
+                                    String wlString = playerHashMap.get(game.getWinner());
+
+                                    String[] temp = wlString.split(", ");
+                                    int newVal = Integer.parseInt(temp[0]) + 1;
+
+                                    playerHashMap.replace(game.getWinner(), newVal + ", " + temp[1]);
                                 }
                                 else {
-                                    playerHashMap.put(g.getWinner(), 1);
+                                    playerHashMap.put(game.getWinner(), "1, 0");
+                                }
+
+                                // Set Losers
+                                if (playerHashMap.containsKey(game.getLoser())) {
+                                    String wlString = playerHashMap.get(game.getLoser());
+
+                                    String[] temp = wlString.split(", ");
+                                    int newVal = Integer.parseInt(temp[1]) + 1;
+
+                                    playerHashMap.replace(game.getLoser(), temp[0] + ", " + newVal);
+                                }
+                                else {
+                                    playerHashMap.put(game.getLoser(), "0, 1");
                                 }
                             }
                         }
@@ -271,7 +290,24 @@ public class Server {
                         myOutputStream.writeObject(playerHashMap);
                         myOutputStream.flush();
                     }
-                    else if (action.equals("Give my history")) {}
+                    else if (action.equals("Give my history")) {
+                        HashMap<Date, String> gameHashMap = new HashMap<>();
+                        ArrayList<GameData> list = GameData.GetAllGames();
+
+                        for (GameData game : list) {
+                            if (game.getLoser().equals(username)) {
+                                String dataString = game.getWinner() + ", Lost";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
+                            if (game.getWinner().equals(username)) {
+                                String dataString = game.getLoser() + ", Won";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
+                        }
+
+                        myOutputStream.writeObject(gameHashMap);
+                        myOutputStream.flush();
+                    }
                     else {
                         System.out.println("INVALID INPUT: " + action);
                         alive = false;
@@ -285,6 +321,27 @@ public class Server {
 
             removeClient(myId);
         }
+    }
+
+    // MAIN.
+    @SuppressWarnings("unused")
+    public static void main(String[] args) {
+        // Init a save file
+        Path path = Path.of("Saved_games.dat");
+
+        // testSave(); 
+        // testLoad();
+
+        try {
+            if (!Files.exists(path)) Files.createFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Server launch
+        System.out.println("\n\nStarting server...\n\n");
+
+        Server s = new Server(2);
     }
     
     // Helper methods.
@@ -408,6 +465,25 @@ public class Server {
         ArrayList<GameData> list = GameData.GetAllGames();
         list.forEach(System.out::println);
     }
+  
+    private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
+        String[] one = {"Will", "Fred"};
+        String[] two = {"Fred", "Jill"};
+        String[] three = {"Jill", "Jane"};
+
+        String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
+        GameData exampleGame = new GameData(one, new Date(), "Will", "Fred", example_board);
+        //GameData exampleGame2 = new GameData(two, new Date(), "Jill", "Fred", example_board);
+        //GameData exampleGame3 = new GameData(three, new Date(), "Jane", "Jill", example_board);
+
+        try {
+            GameData.SaveGame(exampleGame);
+            //GameData.SaveGame(exampleGame2);
+            //GameData.SaveGame(exampleGame3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private GameData determineGameDataFormat(String username, String x_or_o) {
         String my_name = username; String enemy_name;
@@ -442,19 +518,5 @@ public class Server {
 
         System.out.println("Something went wrong in determineGameDataFormat() in Server.java!");
         return new GameData(null, null, null, null, null);
-    }
-
-    // MAIN.
-    @SuppressWarnings("unused")
-    public static void main(String[] args) {
-        // Init a save file
-        Path path = Path.of("Saved_games.dat");
-
-        try { if (!Files.exists(path)) Files.createFile(path); } 
-        catch (IOException e) { e.printStackTrace(); }
-
-        // Server launch
-        System.out.println("\n\nStarting server...\n\n");
-        Server s = new Server(2);
     }
 }

@@ -1,11 +1,15 @@
 package client.Controllers;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.collections.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /*
     William Vipperman, Yarrick Dillard
@@ -19,21 +23,44 @@ public class MatchHistoryPageController {
     Socket socket;
     ObjectInputStream input;
     ObjectOutputStream output;
+    HashMap<Date, String> gameHashMap = null;
+    ObservableList<MatchDataRow> data = FXCollections.observableArrayList();
     
     // FXML Variables.
-    @FXML TableView match_history_table;
-    @FXML TableColumn date_column, time_column, opponent_column, result_column;
+    @FXML TableView<MatchDataRow> match_history_table;
+    @FXML TableColumn<MatchDataRow, String> date_column, time_column, opponent_column, result_column;
 
     // FXML Methods.
     @FXML private void initialize() {
-        // Populate match_history_table with values.
+        date_column.setCellValueFactory(new PropertyValueFactory<>("date"));
+        time_column.setCellValueFactory(new PropertyValueFactory<>("time"));
+        opponent_column.setCellValueFactory(new PropertyValueFactory<>("playedWith"));
+        result_column.setCellValueFactory(new PropertyValueFactory<>("result"));
     }
 
     // Other methods.
+    @SuppressWarnings("unchecked")
     public void initializeData(Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         System.out.println("initalizeData()");
         this.socket = socket;
         input = in;
         output = out;
+
+        try {
+            output.writeUTF("Give my history");
+            output.flush();
+
+            gameHashMap = (HashMap<Date, String>) input.readObject();
+
+            for (Map.Entry<Date, String> game : gameHashMap.entrySet()) {
+                String[] temp = game.getValue().split(", ");
+
+                data.add(new MatchDataRow(temp[0], game.getKey(), temp[1]));
+            }
+
+            match_history_table.setItems(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
