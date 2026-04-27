@@ -1,11 +1,14 @@
 package client.Controllers;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.Date;
+import java.util.HashMap;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.collections.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /*
     William Vipperman, Yarrick Dillard
@@ -19,10 +22,12 @@ public class MatchHistoryPageController {
     Socket socket;
     ObjectInputStream input;
     ObjectOutputStream output;
+    HashMap<Date, String> GameHashMap = null;
+    ObservableList<MatchDataRow> data = FXCollections.observableArrayList();
     
     // FXML Variables.
-    @FXML TableView match_history_table;
-    @FXML TableColumn date_column, time_column, opponent_column, result_column;
+    @FXML TableView<MatchDataRow> match_history_table;
+    @FXML TableColumn<MatchDataRow, String> date_column, time_column, opponent_column, result_column;
 
     // FXML Methods.
     @FXML private void initialize() {
