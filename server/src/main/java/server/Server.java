@@ -236,31 +236,22 @@ public class Server {
                     }
                     else if (action.equals("Give me the ending board.")) {
                         respond(board_arr[0][0] + board_arr[1][0] + board_arr[2][0] + board_arr[0][1] + board_arr[1][1] + board_arr[2][1] + board_arr[0][2] + board_arr[1][2] + board_arr[2][2]);
+                        stupid_compsci_major_counter_variable = -1;
                     }
                     else if (action.equals("Back to main menu.")) {
                         System.out.println("Back to main menu.\t" + stupid_compsci_major_counter_variable);
 
                         if (stupid_compsci_major_counter_variable == 1) {   // Save game data to .dat file.
-                            String my_name = username;
-                            String enemy_name;
-                            
-                            if (threads[0].username.equals(username)) enemy_name = threads[1].username;
-                            else enemy_name = threads[0].username;
+                            GameData game_data = determineGameDataFormat(username, current_x_or_o);
 
-                            GameData game_data = new GameData("Player1", "Player2", board_arr);
-
-                            try {
-                                GameData.saveGame(game_data); 
-                                testLoad(); 
-                            } 
-                            catch (Exception e) { e.printStackTrace(); }
+                            GameData.SaveGame(game_data);
+                            testLoad();
 
                             resetVariables();
                             current_x_or_o = "";
                         }
                         else { stupid_compsci_major_counter_variable = 1; }
                     }
-
                     else if (action.equals("Give leaderboard")) {
                         HashMap<String, Integer> playerHashMap = new HashMap<>();
                         ArrayList<GameData> list = GameData.GetAllGames();
@@ -280,9 +271,7 @@ public class Server {
                         myOutputStream.writeObject(playerHashMap);
                         myOutputStream.flush();
                     }
-                    else if (action.equals("Give my history")) {
-
-                    }
+                    else if (action.equals("Give my history")) {}
                     else {
                         System.out.println("INVALID INPUT: " + action);
                         alive = false;
@@ -415,32 +404,44 @@ public class Server {
         board_arr[2][0] = " "; board_arr[2][1] = " "; board_arr[2][2] = " ";
     }
 
-    private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
-        String[] one = {"John", "Jane"};
-        String[] two = {"John", "Jill"};
-        String[] three = {"Jill", "Jane"};
-
-        String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-        GameData exampleGame = new GameData(one, new Date(), "John", "Jane", example_board);
-        GameData exampleGame2 = new GameData(two, new Date(), "John", "Jill", example_board);
-        GameData exampleGame3 = new GameData(three, new Date(), "Jill", "Jane", example_board);
-
-        try {
-            GameData.SaveGame(exampleGame);
-            GameData.SaveGame(exampleGame2);
-            GameData.SaveGame(exampleGame3);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private static void testLoad() throws ClassNotFoundException, IOException {
+        ArrayList<GameData> list = GameData.GetAllGames();
+        list.forEach(System.out::println);
     }
 
-    private static void testLoad() {
-        try {
-            ArrayList<GameData> list = GameData.GetAllGames();
-            list.forEach(System.out::println);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private GameData determineGameDataFormat(String username, String x_or_o) {
+        String my_name = username; String enemy_name;
+                            
+        if (threads[0].username.equals(username)) enemy_name = threads[1].username;
+        else enemy_name = threads[0].username;
+
+        String[] players = { my_name, enemy_name };
+
+        if (x_or_o.equals("X")) {
+            switch (win_state) {
+                case XWin: { return new GameData(players, new Date(), my_name, enemy_name, board_arr); }
+                case OWin: { return new GameData(players, new Date(), enemy_name, my_name, board_arr); }
+                case Draw: { return new GameData(players, new Date(), null, null, board_arr); }
+                default: {
+                    System.out.println("Gangster, the situation is impossible over in determineGameDataFormat() in Server.java: " + x_or_o);
+                    break;
+                }
+            }
         }
+        else {
+            switch (win_state) {
+                case XWin: { return new GameData(players, new Date(), enemy_name, my_name, board_arr); }
+                case OWin: { return new GameData(players, new Date(), my_name, enemy_name, board_arr); }
+                case Draw: { return new GameData(players, new Date(), null, null, board_arr); }
+                default: {
+                    System.out.println("Gangster, the situation is impossible over in determineGameDataFormat() in Server.java: " + x_or_o);
+                    break;
+                }
+            }
+        }
+
+        System.out.println("Something went wrong in determineGameDataFormat() in Server.java!");
+        return new GameData(null, null, null, null, null);
     }
 
     // MAIN.

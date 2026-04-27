@@ -27,41 +27,74 @@ public class LoginPageController {
     String error_msg = "";
 
     // FXML Methods.
+    @FXML private void initialize() {
+        name_textfield.setTextFormatter(new TextFormatter<>(change -> {
+            String new_text = change.getControlNewText();
+
+            if (new_text.length() > 14) { return null; }
+            else if (!containsValidChars(new_text)) { return null; }
+            
+            return change;
+        }));
+
+        port_number_textfield.setTextFormatter(new TextFormatter<>(change -> {
+            String new_text = change.getControlNewText();
+
+            if (change.getControlNewText().length() > 4) { return null; }
+            else if (!isNumeric(new_text)) { return null; }
+
+            return change; 
+        }));
+    }
+
     @FXML private void submitButtonPressed() {
         // Step 1: Verify user credentials with the server.
         String user_name = name_textfield.getText();
         String port_number = port_number_textfield.getText();
 
-        // ...
-        ObjectInputStream myInputStream;
-        ObjectOutputStream myOutputStream;
-        Socket socket;
+        boolean invalid_input = invalidUserInput();
 
-        try {
-            InetAddress addr = InetAddress.getByName("localhost");
-            socket = new Socket(addr, Integer.parseInt(port_number));
-            
-            myOutputStream = new ObjectOutputStream(socket.getOutputStream());
-    		myOutputStream.flush();
-            myOutputStream.writeObject(user_name);
-			myOutputStream.flush();
+        if (!invalid_input) {
+            ObjectInputStream myInputStream;
+            ObjectOutputStream myOutputStream;
+            Socket socket = new Socket();
 
-            myInputStream = new ObjectInputStream(socket.getInputStream());
+            try {
+                InetAddress addr = InetAddress.getByName("localhost");
 
-            // Step 2: Open main menu window.
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("main-menu.fxml"));
-            Parent root = loader.load();
+                try { socket = new Socket(addr, Integer.parseInt(port_number)); }
+                catch (IOException e) { 
+                    displayErrorPopup("Server does not exist at the specified port: " + port_number + "."); 
+                    return;
+                }
+                
+                
+                myOutputStream = new ObjectOutputStream(socket.getOutputStream());
+                myOutputStream.flush();
+                myOutputStream.writeObject(user_name);
+                myOutputStream.flush();
 
-            MainMenuController mm_controller = loader.getController();
-            mm_controller.initializeData(user_name, socket, myInputStream, myOutputStream);
+                myInputStream = new ObjectInputStream(socket.getInputStream());
 
-            Stage stage = (Stage) name_textfield.getScene().getWindow();
-            stage.setResizable(false);
-            stage.setTitle("Main menu");
-            stage.setScene(new Scene(root));
+                // Step 2: Open main menu window.
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("main-menu.fxml"));
+                Parent root = loader.load();
+
+                MainMenuController mm_controller = loader.getController();
+                mm_controller.initializeData(user_name, socket, myInputStream, myOutputStream);
+
+                Stage stage = (Stage) name_textfield.getScene().getWindow();
+                stage.setResizable(false);
+                stage.setTitle("Main menu");
+                stage.setScene(new Scene(root));
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        catch (IOException e) {
-            e.printStackTrace();
+        else {
+            displayErrorPopup(error_msg);
+            error_msg = "";
         }
     }
 
@@ -71,18 +104,22 @@ public class LoginPageController {
         port_number = port_number_textfield.getText();
 
         if (user_name.isBlank() || port_number.isBlank()) { 
+            System.out.println("BLANK");
             error_msg = "Fields cannot be left blank!";
             return true; 
         }
-        if (user_name.length() > 14) { 
+        else if (user_name.length() > 14) { 
+            System.out.println("SHORT");
             error_msg = "Username must be less than 14 characters!\nCurrently " + user_name.length() + " characters.";
             return true; 
         }
-        if (!isNumeric(port_number)) { 
+        else if (!isNumeric(port_number)) { 
+            System.out.println("PORT");
             error_msg = "Port Number can only contain numbers!";
             return true; 
         }
-        if (!containsValidChars(user_name)) { 
+        else if (!containsValidChars(user_name)) { 
+            System.out.println("INVALID CHAR");
             error_msg = "Invalid characters in username!\nValid: a-z  A-Z  -  _";
             return true; 
         }
@@ -114,8 +151,8 @@ public class LoginPageController {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("error-popup.fxml"));
             Parent root = loader.load();
 
-            ErrorPopupController lp_controller = loader.getController();
-            lp_controller.initializeData(error_msg);
+            ErrorPopupController ep_controller = loader.getController();
+            ep_controller.initializeData(error_msg);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
