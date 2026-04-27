@@ -138,6 +138,7 @@ public class Server {
             catch (Exception e) { e.printStackTrace(); }
         }
 
+        @SuppressWarnings("unused")
         public void run() {  
             boolean alive = true;
 
@@ -299,7 +300,22 @@ public class Server {
                         myOutputStream.flush();
                     }
                     else if (action.equals("Give my history")) {
+                        HashMap<Date, String> gameHashMap = new HashMap<>();
+                        ArrayList<GameData> list = GameData.GetAllGames();
 
+                        for (GameData game : list) {
+                            if (game.getLoser().equals(username)) {
+                                String dataString = game.getWinner() + ", Lost";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
+                            if (game.getWinner().equals(username)) {
+                                String dataString = game.getLoser() + ", Won";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
+                        }
+
+                        myOutputStream.writeObject(gameHashMap);
+                        myOutputStream.flush();
                     }
                     else {
                         System.out.println("INVALID INPUT: " + action);
@@ -322,7 +338,7 @@ public class Server {
         Path path = Path.of("Saved_games.dat");
 
         //testSave(); 
-        //testLoad();
+        testLoad();
 
         try {
             if (!Files.exists(path)) Files.createFile(path);
@@ -454,14 +470,14 @@ public class Server {
     }
 
     private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
-        String[] one = {"Amity", "Jane"};
+        String[] one = {"Will", "Fred"};
         String[] two = {"Fred", "Jill"};
         String[] three = {"Jill", "Jane"};
 
         String[][] example_board = {{"x", "o", "x"}, {"-", "o", "-"}, {"x", "o", "-"}};
-        GameData exampleGame = new GameData(one, new Date(), "Amity", "Jane", example_board);
+        GameData exampleGame = new GameData(one, new Date(), "Will", "Fred", example_board);
         //GameData exampleGame2 = new GameData(two, new Date(), "Jill", "Fred", example_board);
-        //GameData exampleGame3 = new GameData(three, new Date(), "Jill", "Jane", example_board);
+        //GameData exampleGame3 = new GameData(three, new Date(), "Jane", "Jill", example_board);
 
         try {
             GameData.SaveGame(exampleGame);
@@ -479,19 +495,5 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    // MAIN.
-    @SuppressWarnings("unused")
-    public static void main(String[] args) {
-        // Init a save file
-        Path path = Path.of("Saved_games.dat");
-
-        try { if (!Files.exists(path)) Files.createFile(path); } 
-        catch (IOException e) { e.printStackTrace(); }
-
-        // Server launch
-        System.out.println("\n\nStarting server...\n\n");
-        Server s = new Server(2);
     }
 }

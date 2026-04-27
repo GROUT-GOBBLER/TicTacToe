@@ -59,6 +59,8 @@ public class GameData implements Serializable {
     public String getWinner() { return winner; }
     public String getLoser() { return loser; }
     public String[][] getBoard() { return board; }
+    public Date getDate() { return date; }
+    public String[] getPlayers() { return players; }
 
     // Set methods.
     public void setWinner(String winner) { this.winner = winner; }
@@ -94,8 +96,6 @@ public class GameData implements Serializable {
                     fileOut.writeObject(listedGame);
                 }
             }
-
-            fileOut.writeObject(game);
 
             fileOut.writeObject(game);
             fileOut.close();
