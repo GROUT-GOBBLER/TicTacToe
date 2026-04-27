@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import javafx.beans.property.*;
 import javafx.collections.*; 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -44,6 +43,7 @@ public class LeaderboardPageController {
     }
 
     // Other methods.
+    @SuppressWarnings("unchecked")
     public void initializeData(Socket socket, ObjectInputStream in, ObjectOutputStream out) {
         System.out.println("initalizeData()");
         this.socket = socket;
