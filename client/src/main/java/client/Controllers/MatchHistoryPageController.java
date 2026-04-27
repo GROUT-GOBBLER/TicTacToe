@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -50,6 +51,12 @@ public class MatchHistoryPageController {
             output.flush();
 
             gameHashMap = (HashMap<Date, String>) input.readObject();
+
+            for (Map.Entry<Date, String> game : gameHashMap.entrySet()) {
+                String[] temp = game.getValue().split(", ");
+
+                data.add(new MatchDataRow(temp[0], game.getKey(), temp[1]));
+            }
 
             match_history_table.setItems(data);
         } catch (Exception e) {

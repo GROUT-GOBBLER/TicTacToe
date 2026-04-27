@@ -20,25 +20,29 @@ public class MatchDataRow {
         calTime.setTime(playedAt);
 
         String dateString = calTime.get(Calendar.MONTH) + "/" + calTime.get(Calendar.DAY_OF_MONTH) + "/" + calTime.get(Calendar.YEAR);
-        String timeString = calTime.get(Calendar.HOUR) + ":" + calTime.get(Calendar.MINUTE) + ":" + calTime.get(Calendar.SECOND) + " " + calTime.get(Calendar.AM_PM);
+
+        int afternoon = calTime.get(Calendar.AM_PM);
+        String suffix = "";
+        if (afternoon == 0) suffix = "AM"; else suffix = "PM";
+        String timeString = calTime.get(Calendar.HOUR) + ":" + calTime.get(Calendar.MINUTE) + ":" + calTime.get(Calendar.SECOND) + " " + suffix;
 
         this.date = new SimpleStringProperty(dateString);
         this.time = new SimpleStringProperty(timeString);
     }
 
-    public SimpleStringProperty getDate() {
-        return date;
+    public String getDate() {
+        return date.get();
     }
 
-    public SimpleStringProperty getTime() {
-        return time;
+    public String getTime() {
+        return time.get();
     }
 
-    public SimpleStringProperty getPlayedWith() {
-        return playedWith;
+    public String getPlayedWith() {
+        return playedWith.get();
     }
 
-    public SimpleStringProperty getResult() {
-        return result;
+    public String getResult() {
+        return result.get();
     }
 }
