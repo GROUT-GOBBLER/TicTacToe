@@ -304,12 +304,18 @@ public class Server {
                         ArrayList<GameData> list = GameData.GetAllGames();
 
                         for (GameData game : list) {
-                            if (game.getLoser().equals(username)) {
+                            String[] gamePlayers = game.getPlayers();
+
+                            if (game.getLoser() != null && game.getLoser().equals(username)) {
                                 String dataString = game.getWinner() + ", Lost";
                                 gameHashMap.put(game.getDate(), dataString);
                             }
-                            if (game.getWinner().equals(username)) {
+                            else if (game.getWinner() != null && game.getWinner().equals(username)) {
                                 String dataString = game.getLoser() + ", Won";
+                                gameHashMap.put(game.getDate(), dataString);
+                            }
+                            else if (gamePlayers[0].equals(username)) {
+                                String dataString = gamePlayers[1] + ", Tie";
                                 gameHashMap.put(game.getDate(), dataString);
                             }
                         }
