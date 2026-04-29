@@ -89,13 +89,12 @@ public class GameData implements Serializable {
     public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
         ArrayList<GameData> gameList = GetAllGames();
 
-        try {
-            ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", false));
-            if (gameList.size() > 0) {
-                for (GameData listedGame : gameList) {
-                    fileOut.writeObject(listedGame);
-                }
+        ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", false));
+        if (gameList.size() > 0) {
+            for (GameData listedGame : gameList) {
+                fileOut.writeObject(listedGame);
             }
+        }
 
             fileOut.writeObject(game);
             fileOut.close();
@@ -106,9 +105,8 @@ public class GameData implements Serializable {
     public static ArrayList<GameData> GetAllGames() throws ClassNotFoundException, IOException {
         ObjectInputStream fileIn = null;
 
-        try {
-            fileIn = new ObjectInputStream(new FileInputStream("Saved_games.dat"));
-        } catch (Exception e) {
+        try { fileIn = new ObjectInputStream(new FileInputStream("Saved_games.dat")); } 
+        catch (Exception e) {
             if (fileIn != null) fileIn.close();
             return new ArrayList<GameData>();
         }
@@ -131,9 +129,7 @@ public class GameData implements Serializable {
             fileIn.close();
             return new ArrayList<GameData>();
         }
-        catch (Exception e3) {
-            e3.printStackTrace();
-        }
+        catch (Exception e3) { e3.printStackTrace(); }
 
         fileIn.close();
         return new ArrayList<GameData>();
