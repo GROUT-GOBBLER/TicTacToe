@@ -89,16 +89,17 @@ public class GameData implements Serializable {
     public static void SaveGame(GameData game) throws ClassNotFoundException, IOException {
         ArrayList<GameData> gameList = GetAllGames();
 
-        ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", false));
-        if (gameList.size() > 0) {
-            for (GameData listedGame : gameList) {
-                fileOut.writeObject(listedGame);
+        try {
+            ObjectOutputStream fileOut = new ObjectOutputStream(new FileOutputStream("Saved_games.dat", false));
+            if (gameList.size() > 0) {
+                for (GameData listedGame : gameList) {
+                    fileOut.writeObject(listedGame);
+                }
             }
-        }
 
-            fileOut.writeObject(game);
-            fileOut.close();
-        } 
+                fileOut.writeObject(game);
+                fileOut.close();
+            } 
         catch (Exception e) { e.printStackTrace(); }
     }
 
