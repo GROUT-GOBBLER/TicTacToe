@@ -25,6 +25,8 @@ public class GameOverPageController {
     private ObjectInputStream input;
     private ObjectOutputStream output;
 
+    private boolean isMultiplayer;
+    
     private String username = "";
     private String[][] ending_board = {
         {"", "", ""},
@@ -34,12 +36,12 @@ public class GameOverPageController {
 
     // FXML methods.
     @FXML private void onReturnToMainMenuButtonPressed() {
-        System.out.println("onReturnToMainMenuButtonPressed()");
-
         try {
-            // Inform server1.
-            output.writeUTF("Back to main menu.");
-            output.flush();
+            // Inform server.
+            if (isMultiplayer) {
+                output.writeUTF("Back to main menu.");
+                output.flush();
+            }
 
             // Load main menu screen.
             FXMLLoader loader = new FXMLLoader(App.class.getResource("main-menu.fxml"));
@@ -64,6 +66,7 @@ public class GameOverPageController {
         input = in;
         output = out;
         username = name;
+        isMultiplayer = true;
 
         try {
             // Get win/lose.
@@ -100,9 +103,38 @@ public class GameOverPageController {
                 catch (Exception e) {}
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception e) { e.printStackTrace(); }
+        
+    }
+
+    public void initializeData(Socket socket, ObjectInputStream in, ObjectOutputStream out, String x_or_o, String name, String win_status, String[][] singlePlayerEndingBoard) {
+        // Set values.
+        this.socket = socket;
+        input = in;
+        output = out;
+        username = name;
+        isMultiplayer = false;
+
+        // Set win/lose label.
+        if (win_status.equals("Win") || win_status.equals("Lose")) {
+            you_won_lost_label.setText("You " + win_status + "!");
         }
+        else {
+            you_won_lost_label.setText("Draw.");
+        }
+
+        // Set each button with its corresponding value.
+        ending_board = singlePlayerEndingBoard;
+
+        button_A1.setText(ending_board[0][0]);
+        button_A2.setText(ending_board[1][0]);
+        button_A3.setText(ending_board[2][0]);
+        button_B1.setText(ending_board[0][1]);
+        button_B2.setText(ending_board[1][1]);
+        button_B3.setText(ending_board[2][1]);
+        button_C1.setText(ending_board[0][2]);
+        button_C2.setText(ending_board[1][2]);
+        button_C3.setText(ending_board[2][2]);
     }
 
     private void setEndingBoard(String end_board) {     

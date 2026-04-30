@@ -1,8 +1,6 @@
 package client.Controllers;
 
 import javafx.beans.property.*;
-import java.io.*;
-import java.lang.*;
 
 public class PlayerStats {
     private final SimpleStringProperty player;

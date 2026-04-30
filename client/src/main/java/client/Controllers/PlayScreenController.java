@@ -2,15 +2,12 @@ package client.Controllers;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import java.util.*;
 import client.App;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.*;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -44,6 +41,8 @@ public class PlayScreenController {
 
     // FXML Methods.
     @FXML private void playButtonPressed(Event e) {
+        submit_button.setDisable(false);
+
         // Reset previously selected button.
         if (valid_buttons.contains(button_selected)) button_selected.setText("");
         button_selected.setStyle("-fx-background-color: " + DEFAULT_BUTTON_COLOR);
@@ -56,9 +55,7 @@ public class PlayScreenController {
         button_selected.setText(x_or_o);
     }
 
-    @FXML private void submitButtonPressed() {
-        System.out.println("submitButtonPressed()");
-
+    @FXML private void submitButtonPressed() {        
         try {
             output.writeUTF("I made my move.");
             output.flush();
@@ -73,12 +70,11 @@ public class PlayScreenController {
                 String response = input.readUTF();
 
                 if (response.equals("What was the move?")) {
-                    System.out.println("What was the move?");
                     output.writeUTF("MOVE~" + button_selected.getId());
                     output.flush();
                 }
                 else if (response.equals("Move received.")) {
-                    System.out.println("Move received.");
+                    button_selected.setStyle("-fx-background-color: " + DEFAULT_BUTTON_COLOR);
                     disableButtons();
                     alive = false;
                 } 
@@ -163,17 +159,13 @@ public class PlayScreenController {
             valid_buttons.add(button_C1);
             valid_buttons.add(button_C2);
             valid_buttons.add(button_C3);
-            valid_buttons.add(submit_button);
 
         // Determine 'X' or 'O' status.
         try {
-            System.out.println("What am I?");
             out.writeUTF("What am I?");
             output.flush();
             
             user_num = in.readUTF();
-
-            System.out.println("User number: " + user_num); 
 
             if (user_num.equals("1")) { 
                 x_or_o = "X"; 
@@ -256,9 +248,6 @@ public class PlayScreenController {
     }
 
     private void disableMyMove(Button my_move) {
-        System.out.println("disableMyMove()");
-        System.out.println("Disabling " + my_move.getId() + "...");
-
         if (x_or_o.equals("X")) my_move.setText("X");
         else my_move.setText("O");
 
@@ -267,16 +256,12 @@ public class PlayScreenController {
     }
 
     private void disableOpponentMove(String op_move) {    
-        System.out.println("disableOpponentMove()");
-
         Iterator<Button> iter = valid_buttons.iterator();
 
         while (iter.hasNext()) {
             Button button = iter.next();
 
             if (button.getId().equals(op_move)) {
-                System.out.println("Disabling " + button.getId() + "...");
-
                 if (x_or_o.equals("X")) button.setText("O");
                 else button.setText("X");
 
