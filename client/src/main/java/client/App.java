@@ -3,6 +3,7 @@ package client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 
@@ -22,6 +23,11 @@ public class App extends Application {
         scene = new Scene(loadFXML("login-page"));
         stage.setScene(scene);
         stage.setTitle("LOGIN");
+
+        stage.getIcons().add(
+            new Image(getClass().getResourceAsStream("/client/Icon.png"))
+        );
+
         stage.setResizable(false);
         stage.show();
     }

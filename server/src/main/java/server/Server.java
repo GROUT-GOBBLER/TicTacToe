@@ -475,21 +475,6 @@ public class Server {
         ArrayList<GameData> list = GameData.GetAllGames();
         list.forEach(System.out::println);
     }
-  
-    private static void testSave() { // THIS IS ONLY FOR TESTING SAVING, use the "GameData.SaveGame();" method instead
-        String[] one = {"Will", "Fred"};
-        //String[] two = {"Fred", "Jill"};
-        //String[] three = {"Jill", "Jane"};
-
-        String[][] example_board = {{"x", "x", "o"}, {"o", "x", "x"}, {"x", "o", "o"}};
-        GameData exampleGame = new GameData(one, new Date(), null, null, example_board);
-
-        try {
-            GameData.SaveGame(exampleGame);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private GameData determineGameDataFormat(String username, String x_or_o) {
         String my_name = username; String enemy_name;

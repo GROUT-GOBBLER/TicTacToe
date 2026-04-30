@@ -9,6 +9,7 @@ import client.App;
 import javafx.application.Platform;
 import javafx.fxml.*;
 import javafx.scene.*;
+import javafx.scene.image.Image;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
@@ -42,6 +43,11 @@ public class MainMenuController {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Match History");
+
+            stage.getIcons().add(
+                new Image(getClass().getResourceAsStream("/client/Icon.png"))
+            );
+
             stage.setScene(scene);
             stage.show();
         }
@@ -61,6 +67,11 @@ public class MainMenuController {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setTitle("Leaderboard");
+
+            stage.getIcons().add(
+                new Image(getClass().getResourceAsStream("/client/Icon.png"))
+            );
+
             stage.setScene(scene);
             stage.show();
         }
