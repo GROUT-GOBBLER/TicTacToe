@@ -105,7 +105,7 @@
             <Insets left="15.0" right="15.0" top="15.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="submit_button" mnemonicParsing="false" onAction="#submitButtonPressed" text="SUBMIT MOVE" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Button fx:id="submit_button" disable="true" mnemonicParsing="false" onAction="#submitButtonPressed" text="SUBMIT MOVE" underline="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <font>
             <Font name="Times New Roman" size="18.0" />
          </font>

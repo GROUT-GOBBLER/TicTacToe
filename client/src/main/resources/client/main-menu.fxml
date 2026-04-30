@@ -65,12 +65,12 @@
             <Font name="Times New Roman" size="18.0" />
          </font>
       </Button>
-      <Button fx:id="play_button" mnemonicParsing="false" onAction="#joinGameButtonPressed" text="PLAY" underline="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button fx:id="play_button" mnemonicParsing="false" onAction="#multiplayerGameButtonPressed" text="PLAY" underline="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <font>
             <Font name="Times New Roman" size="18.0" />
          </font>
          <GridPane.margin>
-            <Insets />
+            <Insets right="15.0" />
          </GridPane.margin>
       </Button>
       <Label fx:id="current_connected_label" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
@@ -81,15 +81,31 @@
             <Font name="System Italic" size="14.0" />
          </font>
       </Label>
-      <Label text="Join a Game" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Label text="Multi-player Game" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <font>
             <Font size="14.0" />
          </font>
          <GridPane.margin>
-            <Insets bottom="55.0" />
+            <Insets bottom="55.0" right="15.0" />
          </GridPane.margin>
       </Label>
       <Label text="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" textOverrun="CLIP" GridPane.rowIndex="1" GridPane.valignment="TOP" />
       <Label text="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" textOverrun="CLIP" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+      <Label text="Single-player Game" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="55.0" left="15.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button mnemonicParsing="false" onAction="#singleplayerGameButtonPressed" text="PLAY" underline="true" GridPane.rowIndex="2">
+         <font>
+            <Font name="Times New Roman" size="18.0" />
+         </font>
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Button>
    </children>
 </GridPane>

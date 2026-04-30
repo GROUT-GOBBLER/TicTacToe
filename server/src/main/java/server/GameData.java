@@ -95,7 +95,8 @@ public class GameData implements Serializable {
                 fileOut.writeObject(listedGame);
             }
         }
-
+        
+        try {
             fileOut.writeObject(game);
             fileOut.close();
         } 
